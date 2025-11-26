@@ -36,7 +36,8 @@ The project uses a standard Turborepo layout with Bun workspaces:
 │       └── Optimized for Core Web Vitals (Lighthouse 100)
 └── packages/
     ├── ui/                  # Shared Design System
-    │   ├── src/components/ui/    (Shadcn primitives)
+    │   ├── src/components/      (Shadcn components)
+    │   ├── src/lib/utils.ts     (cn utility)
     │   └── src/globals.css       (Tailwind v4 @theme definition)
     ├── db/                  # Database Schema & Client
     │   ├── src/schema.ts         (Drizzle schema)
@@ -136,8 +137,8 @@ We use **Tailwind v4 CSS variables** in `packages/ui/src/globals.css`.
 ### AI Interaction Rules
 
 - **No Comments**: Do not add comments explaining *what* the code does. Only explain *why* a complex decision was made.
-- **Scaffolding**: When asked to create a component, check `packages/ui` first. Do not duplicate primitives.
-- **Imports**: Use absolute imports `@repo/ui` or `@/lib`.
+- **Scaffolding**: When asked to create a component, check `packages/ui/src/components` first. Do not duplicate primitives.
+- **Imports**: Use workspace imports `@repo/ui` for shared components, or relative imports within packages.
 
 ---
 

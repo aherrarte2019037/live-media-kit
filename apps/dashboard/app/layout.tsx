@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "@repo/ui/src/globals.css";
+import "./globals.css";
+import { ThemeProvider } from "@repo/ui";
 
 export const metadata: Metadata = {
   title: "Dashboard - MyBio Space",
@@ -12,9 +13,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
-

@@ -7,31 +7,20 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@repo/ui": [
-        "../../packages/ui/src"
-      ],
-      "@repo/db": [
-        "../../packages/db/src"
-      ],
-      "@repo/utils": [
-        "../../packages/utils/src"
-      ],
-      "@repo/config": [
-        "../../packages/config"
-      ]
-    },
-    "allowJs": true
+      "@/*": ["./*"],
+      "@repo/ui": ["../../packages/ui/src"],
+      "@repo/db": ["../../packages/db/src"],
+      "@repo/utils": ["../../packages/utils/src"],
+      "@repo/config": ["../../packages/config"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
