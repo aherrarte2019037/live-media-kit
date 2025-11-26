@@ -1,0 +1,25 @@
+{
+  "name": "mybio-space",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "type-check": "turbo run type-check"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "@biomejs/biome": "^1.9.0"
+  },
+  "packageManager": "bun@1.1.0",
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}
+
