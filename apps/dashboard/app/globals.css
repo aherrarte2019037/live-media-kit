@@ -1,1 +1,6 @@
-@import "@repo/ui/src/globals.css";
+@import "@repo/ui/src/base.css";
+
+@theme {
+  /* Dashboard-specific theme overrides */
+  /* Add your custom theme variables here */
+}

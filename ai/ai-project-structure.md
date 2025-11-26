@@ -38,7 +38,7 @@ The project uses a standard Turborepo layout with Bun workspaces:
     ├── ui/                  # Shared Design System
     │   ├── src/components/      (Shadcn components)
     │   ├── src/lib/utils.ts     (cn utility)
-    │   └── src/globals.css       (Tailwind v4 @theme definition)
+    │   └── src/base.css          (Base theme - imported by apps)
     ├── db/                  # Database Schema & Client
     │   ├── src/schema.ts         (Drizzle schema)
     │   └── src/client.ts         (Supabase connection)
@@ -90,12 +90,13 @@ bun run format
 
 ## 5. Theming Strategy (TweakCDN Style)
 
-We use **Tailwind v4 CSS variables** in `packages/ui/src/globals.css`.
+We use **Tailwind v4 CSS variables** with a base theme and app-specific overrides.
 
-### Dynamic Injection:
+### Theme Architecture:
 
-- The `ui` package exports a `<ThemeProvider theme={userTheme} />`.
-- This component accepts a JSON object (colors, radius) and applies them as inline styles to the root element, overriding the CSS variables defined in `@theme`.
+- **Base Theme**: `packages/ui/src/base.css` contains the base theme with all CSS variables, colors, and design tokens.
+- **App Themes**: Each app (`apps/dashboard/app/globals.css`, `apps/profile/app/globals.css`) imports the base theme and can override/extend it with app-specific variables.
+- **Runtime Injection**: The `ui` package exports a `<ThemeProvider theme={userTheme} />` that accepts a JSON object (colors, radius) and applies them as inline styles to the root element, overriding CSS variables for user-customizable themes.
 
 ---
 
