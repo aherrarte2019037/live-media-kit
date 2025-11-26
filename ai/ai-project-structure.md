@@ -95,7 +95,7 @@ We use **Tailwind v4 CSS variables** with a base theme and app-specific override
 ### Theme Architecture:
 
 - **Base Theme**: `packages/ui/src/base.css` contains the base theme with all CSS variables, colors, and design tokens.
-- **App Themes**: Each app (`apps/dashboard/app/globals.css`, `apps/profile/app/globals.css`) imports the base theme and can override/extend it with app-specific variables.
+- **App Themes**: Each app (`apps/dashboard/app/tailwind.css`, `apps/profile/app/tailwind.css`) imports the base theme and can override/extend it with app-specific variables.
 - **Runtime Injection**: The `ui` package exports a `<ThemeProvider theme={userTheme} />` that accepts a JSON object (colors, radius) and applies them as inline styles to the root element, overriding CSS variables for user-customizable themes.
 
 ---

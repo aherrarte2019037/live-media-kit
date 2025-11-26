@@ -5,6 +5,6 @@ export default function ProfilePage() {
       <p className="mt-4 text-muted-foreground">
         Public Profile - Coming soon
       </p>
-    </main>
+      </main>
   );
 }
