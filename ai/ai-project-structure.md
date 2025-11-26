@@ -31,9 +31,7 @@ The project uses a standard Turborepo layout with Bun workspaces:
 │   ├── dashboard/           # Next.js 15 (Creator Admin Portal)
 │   │   ├── Features: Auth, OAuth Connect, Stripe Billing, Theme Editor
 │   │   └── Uses "use client" heavily for the editor interface
-│   └── profile/             # Next.js 15 (Public Media Kit)
-│       ├── Features: ISR Caching, Motion animations, Read-only DB access
-│       └── Optimized for Core Web Vitals (Lighthouse 100)
+│   └── template/           # Next.js App Template - copy to create new apps
 └── packages/
     ├── ui/                  # Shared Design System
     │   ├── src/components/      (Shadcn components)
@@ -49,114 +47,60 @@ The project uses a standard Turborepo layout with Bun workspaces:
 
 ---
 
-## 3. Dependency Management (Bun Workspaces)
+## 3. Dependency Management
 
-We use **Bun's native workspace** feature for monorepo management.
-
-### Key Commands:
+Uses Bun workspaces. Commands:
 ```bash
-# Install all dependencies
-bun install
-
-# Add a dependency to a specific workspace
-bun add react --cwd apps/dashboard
-
-# Add a dev dependency to root
-bun add -d turbo
-
-# Run development
-bun run dev
+bun install                    # Install all dependencies
+bun add react --cwd apps/dashboard  # Add to specific workspace
+bun run dev                    # Run all apps
 ```
 
 ---
 
 ## 4. Biome Configuration
 
-We use **Biome** as a single tool for linting and formatting (replaces ESLint + Prettier).
-
-### Commands:
+Single tool for linting and formatting. Commands:
 ```bash
-# Check for issues
-bun run lint
-
-# Fix auto-fixable issues
-biome check --write .
-
-# Format only
-bun run format
+bun run lint      # Check for issues
+bun run format    # Format code
 ```
 
 ---
 
-## 5. Theming Strategy (TweakCDN Style)
+## 5. Theming Strategy
 
-We use **Tailwind v4 CSS variables** with a base theme and app-specific overrides.
-
-### Theme Architecture:
-
-- **Base Theme**: `packages/ui/src/base.css` contains the base theme with all CSS variables, colors, and design tokens.
-- **App Themes**: Each app (`apps/dashboard/app/tailwind.css`, `apps/profile/app/tailwind.css`) imports the base theme and can override/extend it with app-specific variables.
-- **Runtime Injection**: The `ui` package exports a `<ThemeProvider theme={userTheme} />` that accepts a JSON object (colors, radius) and applies them as inline styles to the root element, overriding CSS variables for user-customizable themes.
+- **Base Theme**: `packages/ui/src/base.css` - shared CSS variables and design tokens
+- **App Themes**: Each app's `app/tailwind.css` imports base and can override variables
+- **Runtime**: `ThemeProvider` supports user-customizable themes (light theme only for now)
 
 ---
 
-## 6. Senior Developer Code Style Guidelines
+## 6. Code Style Guidelines
 
-### General Philosophy
+**General**: Concise, functional, predictable. Server-first (RSC by default, `"use client"` only at leaves).
 
-- **Concise & Functional**: Code should be boring and predictable. Avoid clever one-liners that sacrifice readability.
-- **Composition over Inheritance**: Use React composition.
-- **Server-First**: Default to React Server Components (RSC). Only use `"use client"` at the leaves of the component tree (buttons, inputs, interactive areas).
+**TypeScript**: No `any`. Use Zod for boundaries. Rely on type inference.
 
-### TypeScript & Zod
+**Next.js 15**: Server Actions for mutations. Fetch in Server Components. Use Suspense for loading.
 
-- **No `any`**: Strictly prohibited. Use `unknown` if data shape is ambiguous and narrow it later.
-- **Zod for Boundaries**: All API inputs, URL params, and Database responses must be parsed with Zod schemas.
-- **Type Inference**: Rely on TS inference where possible. Don't manually type simple variables.
-  - ❌ **Bad**: `const count: number = 0;`
-  - ✅ **Good**: `const count = 0;`
+**Tailwind**: CSS variables for design tokens. Use `cn()` for className merging.
 
-### React & Next.js 15 Patterns
+**Biome**: Auto-format before commit. No unused imports.
 
-- **Server Actions**: Use Server Actions for ALL mutations. Do not create API routes (`/app/api/`) unless you need to expose a webhook to a 3rd party (e.g., Stripe Webhook).
-- **Data Fetching**: Fetch data directly in Server Components. Do not use `useEffect` for data fetching.
-- **Suspense**: Use React Suspense boundaries for loading states. Do not use `isLoading` booleans if possible.
+**Components**: Check `packages/ui/src/components` first. Use `@repo/ui` imports.
 
-### Tailwind v4 & Styling
-
-- **Variables**: Use CSS variables for all design tokens to support the "TweakCDN" live editing feature.
-  - **Usage**: `bg-[var(--primary)]` or define `--primary` in the CSS `@theme` block and use `bg-primary`.
-- **Sorting**: Class names should be logical (Layout → Box Model → Typography → Visuals).
-- **Merging**: ALWAYS use `cn()` (clsx + tailwind-merge) when accepting a `className` prop.
-
-### Biome & Code Quality
-
-- **Auto-formatting**: Always run `bun run format` before committing.
-- **No Unused Imports**: Biome will auto-remove them with `organizeImports`.
-- **Consistent Style**: Let Biome handle all formatting decisions. Don't fight the formatter.
-
-### AI Interaction Rules
-
+**AI Interaction Rules**:
 - **No Comments**: Do not add comments explaining *what* the code does. Only explain *why* a complex decision was made.
 - **Scaffolding**: When asked to create a component, check `packages/ui/src/components` first. Do not duplicate primitives.
 - **Imports**: Use workspace imports `@repo/ui` for shared components, or relative imports within packages.
 
 ---
 
-## 7. Performance Considerations
+## 7. Creating New Apps
 
-### Why Bun?
+```bash
+cp -r apps/template apps/[your-app-name]
+```
 
-- **Faster installs**: 20-100x faster than npm
-- **Native TypeScript**: No need for ts-node
-- **Built-in bundler**: Can replace some build tools
-- **Drop-in replacement**: Works with existing npm packages
-
-### Biome vs ESLint/Prettier
-
-| Feature | Biome | ESLint + Prettier |
-|---------|-------|-------------------|
-| **Speed** | ~100x faster | Baseline |
-| **Configuration** | Single file | Multiple configs |
-| **Dependencies** | Zero | 100+ packages |
-| **Auto-fix** | Built-in | Requires plugins |
+Update `package.json` name and `app/layout.tsx` metadata.
