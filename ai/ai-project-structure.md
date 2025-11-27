@@ -29,7 +29,7 @@ The project uses a standard Turborepo layout with Bun workspaces:
 ├── turbo.json
 ├── apps/
 │   ├── dashboard/           # Next.js 15 (Creator Admin Portal)
-│   │   ├── Features: Auth, OAuth Connect, Stripe Billing, Theme Editor
+│   │   ├── Features: Supabase Auth (SSR), OAuth Connect, Stripe Billing, Theme Editor
 │   │   └── Uses "use client" heavily for the editor interface
 │   └── template/           # Next.js App Template - copy to create new apps
 └── packages/
@@ -49,7 +49,23 @@ The project uses a standard Turborepo layout with Bun workspaces:
 
 ## 3. Dependency Management
 
-Uses Bun workspaces. Commands:
+Uses Bun workspaces and **Bun Catalogs** for version consistency.
+
+### Bun Catalogs
+Shared dependencies are defined in the root `package.json` under `catalogs`:
+- **default**: Core deps (React, Next.js, TypeScript)
+- **ui**: UI deps (Tailwind, Radix, Lucide)
+- **db**: Database deps (Supabase, Drizzle)
+
+Usage in `package.json`:
+```json
+"dependencies": {
+  "react": "catalog:default",
+  "tailwindcss": "catalog:ui"
+}
+```
+
+### Commands
 ```bash
 bun install                    # Install all dependencies
 bun add react --cwd apps/dashboard  # Add to specific workspace

@@ -12,14 +12,14 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "drizzle-orm": "^0.36.0",
-    "@supabase/supabase-js": "^2.47.0"
+    "drizzle-orm": "catalog:db",
+    "@supabase/supabase-js": "catalog:db"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
-    "dotenv": "^17.2.3",
-    "drizzle-kit": "^0.31.7",
-    "postgres": "^3.4.7",
-    "typescript": "^5.6.0"
+    "dotenv": "catalog:db",
+    "drizzle-kit": "catalog:db",
+    "postgres": "catalog:db",
+    "typescript": "catalog:default"
   }
 }
