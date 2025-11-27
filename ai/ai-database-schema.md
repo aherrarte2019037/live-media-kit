@@ -24,10 +24,6 @@ Stores application-specific user data. This table extends Supabase's `auth.users
 | `email` | `text` | `NOT NULL` | User's email address. |
 | `username` | `text` | `UNIQUE` | Unique handle for the creator (e.g., "josh"). |
 | `tier` | `text` | `DEFAULT 'free'`, `NOT NULL` | Subscription tier (`free` or `pro`). |
-| `stripe_customer_id` | `text` | `UNIQUE` | Stripe Customer ID. |
-| `stripe_subscription_id` | `text` | `UNIQUE` | Stripe Subscription ID. |
-| `stripe_price_id` | `text` | | Stripe Price ID (Plan). |
-| `stripe_current_period_end` | `timestamp` | | Subscription expiration date. |
 | `created_at` | `timestamp` | `DEFAULT now()` | Creation timestamp. |
 | `updated_at` | `timestamp` | `DEFAULT now()` | Last update timestamp. |
 
@@ -36,7 +32,26 @@ Stores application-specific user data. This table extends Supabase's `auth.users
 - **Update**: Users can update their own profile.
 - **Insert**: Users can insert their own profile (on signup).
 
-### 2. Media Kits (`public.media_kits`)
+### 2. Subscriptions (`public.subscriptions`)
+
+Stores subscription details, allowing for multiple providers (Stripe, Lemon Squeezy, etc.).
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `uuid` | `PK`, `DEFAULT gen_random_uuid()` | Unique ID. |
+| `user_id` | `uuid` | `FK -> profiles.id`, `UNIQUE` | Link to the user. |
+| `provider` | `text` | `NOT NULL` | Payment provider (e.g., 'stripe'). |
+| `customer_id` | `text` | `UNIQUE` | Provider's Customer ID. |
+| `subscription_id` | `text` | `UNIQUE` | Provider's Subscription ID. |
+| `price_id` | `text` | | Provider's Price/Plan ID. |
+| `current_period_end` | `timestamp` | | Subscription expiration date. |
+| `created_at` | `timestamp` | `DEFAULT now()` | Creation timestamp. |
+| `updated_at` | `timestamp` | `DEFAULT now()` | Last update timestamp. |
+
+**Row Level Security (RLS):**
+- **Select**: Users can view their own subscription.
+
+### 3. Media Kits (`public.media_kits`)
 
 Stores the media kits created by users.
 

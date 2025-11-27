@@ -19,5 +19,3 @@ When working on this project, ensure all code and decisions align with:
 3. **Code Style**: Adhere to the code style guidelines and best practices outlined in `ai-project-structure.md`
 
 These documents should be considered as the source of truth for project requirements and technical decisions.
-
-Also every time the database schema is update make sure to update the `ai-database-schema.md` to reflect this changes.

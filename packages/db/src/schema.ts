@@ -13,10 +13,6 @@ export const profiles = pgTable("profiles", {
   email: text("email").notNull(),
   username: text("username").unique(),
   tier: text("tier", { enum: ["free", "pro"] }).default("free").notNull(),
-  stripeCustomerId: text("stripe_customer_id").unique(),
-  stripeSubscriptionId: text("stripe_subscription_id").unique(),
-  stripePriceId: text("stripe_price_id"),
-  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
@@ -31,6 +27,26 @@ export const profiles = pgTable("profiles", {
   pgPolicy("Users can insert own profile", {
     for: "insert",
     withCheck: sql`auth.uid() = ${table.id}`,
+  }),
+]);
+
+export const subscriptions = pgTable("subscriptions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" })
+    .unique(),
+  provider: text("provider").notNull(),
+  customerId: text("customer_id").unique(),
+  subscriptionId: text("subscription_id").unique(),
+  priceId: text("price_id"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  pgPolicy("Users can view own subscription", {
+    for: "select",
+    using: sql`auth.uid() = ${table.userId}`,
   }),
 ]);
 
