@@ -1,11 +1,12 @@
-# Project Summary: Live Media Kit Platform
+# Project Summary: Live Media Kit Platform (MVP Strategy)
 
 ## 1. Product Vision
 
-We are building a **"Live Media Kit"** Micro-SaaS for content creators.
+We are building a **"Live Media Kit Platform"**—a specialized portfolio tool for content creators.
 
-- **Problem**: Creators currently pitch brands using static PDF media kits. These become outdated the moment they are sent (subscriber counts change, views go up).
-- **Solution**: A dynamic, web-based media kit (e.g., `kit.bio/username`) that syncs with YouTube/Twitch/TikTok APIs to show real-time, verified metrics.
+- **Problem**: Creators use static PDFs that are untrustworthy and hard to customize for specific brands.
+- **Solution**: A **Multi-Kit Platform** where creators build "Verified One-Pagers." They can create a general kit for everyone, or tailored kits for specific sponsors (e.g., "Gaming Stats" vs. "Tech Stats").
+- **Core Value**: **Verified Trust** (API Data) + **Tailored Relevance** (Custom Kits).
 
 ---
 
@@ -13,45 +14,64 @@ We are building a **"Live Media Kit"** Micro-SaaS for content creators.
 
 ### A. The Creator (Authenticated User)
 
-1. **Onboarding**: Sign up via Google/Email (Supabase Auth).
-2. **Connect Accounts**: OAuth flow to connect YouTube/Twitch channels.
-3. **Theme Customization**: A "TweakCDN-style" editor. The user adjusts a color picker or border radius slider, and the preview updates instantly.
-4. **Section Management**: Drag-and-drop interface to reorder sections (e.g., "About Me", "Audience Demographics", "Past Sponsors").
-5. **Publishing**: User claims a handle (slug) and publishes their kit.
+1. **Onboarding**: Sign up via Google (Supabase Auth) -> **One-Click YouTube Sync**.
+    - *System automatically generates a "Primary Kit" at `kit.bio/username`.*
+2. **Kit Management (The Dashboard)**:
+    - **Single View**: Free users manage their one Primary Kit.
+    - **Multi-View (Pro)**: Users can **Create New** or **Duplicate** existing kits to create specific campaign pages (e.g., `kit.bio/username/gaming`).
+3. **The "Stack" Editor**:
+    - **Layout**: Vertical stack of "Smart Blocks" (Mobile-first).
+    - **Block Types**:
+        - *Static*: Bio, Link Group, Text Area, Past Sponsors.
+        - *Dynamic*: YouTube Growth Graph, Avg Views Card, Rate Card Calculator.
+4. **Theming**: "TweakCDN" style. User picks **Primary Color** and **Corner Radius**. Changes apply instantly via CSS variables.
 
 ### B. The Brand (Public Visitor)
 
-1. **Viewing**: Visits `app.domain.com/username`.
-2. **Performance**: The page loads instantly. Data is fresh (cached <24h).
-3. **Interaction**: Hover effects on charts, animated counters for subscriber numbers.
-4. **Contact**: A protected "Work With Me" button (to prevent scraping) that reveals contact info or opens a form.
+1. **Experience**: Instant load, mobile-optimized "App-like" feel.
+2. **Trust Signals**:
+    - **"Verified" Badge**: Confirms data comes directly from YouTube API.
+    - **Engagement Sparkline**: Shows view velocity (e.g., "Gained 5k views this week").
+3. **Action (Conversion)**:
+    - User clicks **"Work With Me"**.
+    - System performs a server-side check (Server Action) to reveal the email or open a form, protecting the creator from scrapers.
 
 ---
 
-## 3. Key Business Logic & Constraints
+## 3. Key Business Logic & Architecture
 
-### Quota Protection
+### The "Campaign" Logic (One User -> Many Kits)
 
-We rely on the **YouTube Data API v3** which has a **10k daily limit**.
+To allow tailored pitching without duplicating API costs:
+- **Relationship**: `User` (1) ↔ `Kits` (Many).
+- **Quota Protection**: The **Snapshot Engine** (YouTube API fetcher) is linked to the `User`, not the `Kit`.
+    - *Result*: A Pro user can have 10 different kits displaying the same YouTube stats, but we only burn **1 API call** per day to update them all.
 
-- **Rule**: The Public View (`apps/profile`) NEVER calls the YouTube API directly.
-- **Mechanism**: We fetch data only via the Dashboard (manual refresh) or a background Cron job. We store this snapshot in Supabase. The Public View reads from Supabase.
+### URL Routing Strategy
 
-### Theming Engine
+- **Primary Kit**: `app.domain.com/[username]` (Default)
+- **Secondary Kits (Pro)**: `app.domain.com/[username]/[slug]` (e.g., `/josh/q4-rates`)
 
-The app does **not** use static themes. It uses **Runtime CSS Variables**.
+### Monetization (Micro-SaaS)
 
-- The Creator selects a primary color (e.g., `#FF0000`).
-- We save this hex code to the database.
-- On render, we inject `--primary: 0 100% 50%;` into the `<style>` tag of the body, allowing Tailwind v4 to pick it up dynamically.
+**Model**: Freemium. The "Tailored Experience" is the upgrade hook.
+
+| Feature | Free Tier | Pro Tier ($7/mo) |
+| :--- | :--- | :--- |
+| **Kits Allowed** | **1 (Primary Only)** | **Unlimited** (Tailored Links) |
+| **Sync Frequency** | Weekly | Daily/Hourly |
+| **Data Depth** | Current Stats Only | **Historical Growth Graphs** |
+| **Branding** | "Powered by [App]" | **White Label** |
+| **Domain** | `kit.bio/user` | **Custom Domain** (`kit.user.com`) |
 
 ---
 
-## Key Technical Decisions
+## 4. Key Technical Decisions
 
 | Aspect | Implementation |
 |--------|----------------|
-| **API Strategy** | No direct API calls from public pages |
-| **Data Freshness** | <24h cache via background jobs |
-| **Theming** | Runtime CSS variables, no static themes |
-| **Performance** | Instant page loads, optimistic UI updates |
+| **Frontend Layout** | Vertical Stack of Shadcn/UI Cards (Mobile First) |
+| **Data Strategy** | **Snapshot Pattern** (Cron -> DB -> Client) |
+| **Data Schema** | `users` -> `kits` (JSONB Blocks) -> `snapshots` (API Data) |
+| **Theming** | Runtime CSS Variables (`--primary`) injected via Style tag |
+| **Performance** | Next.js 15 ISR or Aggressive Caching (Lighthouse 100) |
