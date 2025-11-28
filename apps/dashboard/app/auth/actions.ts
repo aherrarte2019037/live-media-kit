@@ -91,5 +91,5 @@ export async function resetPassword(formData: FormData) {
     return redirect(`/auth/reset-password?error=${error.message}`);
   }
 
-  return redirect("/");
+  return redirect("/auth/sign-in");
 }
