@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   jsonb,
+  pgEnum,
   pgPolicy,
   pgSchema,
   pgTable,
@@ -9,6 +10,8 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+
+export const onboardingSteps = pgEnum("onboarding_steps", ["username", "stats"]);
 
 const authSchema = pgSchema("auth");
 const authUsers = authSchema.table("users", {
@@ -26,7 +29,7 @@ export const profiles = pgTable(
     tier: text("tier", { enum: ["free", "pro"] })
       .default("free")
       .notNull(),
-    onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
+    onboardingSteps: onboardingSteps("onboarding_steps").array().default([]).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
