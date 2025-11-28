@@ -26,6 +26,7 @@ export const profiles = pgTable(
     tier: text("tier", { enum: ["free", "pro"] })
       .default("free")
       .notNull(),
+    onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
