@@ -9,7 +9,8 @@
     "type-check": "tsc --noEmit",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:types": "supabase gen types typescript --db-url \"$DATABASE_URL\" > src/types.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:db",
@@ -20,6 +21,7 @@
     "dotenv": "catalog:db",
     "drizzle-kit": "catalog:db",
     "postgres": "catalog:db",
+    "supabase": "^2.63.1",
     "typescript": "catalog:default"
   }
 }

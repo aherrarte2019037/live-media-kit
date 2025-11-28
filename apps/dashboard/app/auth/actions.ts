@@ -1,8 +1,8 @@
 "use server";
 
+import { getSiteUrl } from "@repo/utils";
 import { redirect } from "next/navigation";
-import { getSiteUrl } from "@/utils/get-site-url";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/utils/supabase/server";
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
@@ -91,5 +91,11 @@ export async function resetPassword(formData: FormData) {
     return redirect(`/auth/reset-password?error=${error.message}`);
   }
 
+  return redirect("/auth/sign-in");
+}
+
+export async function signOut() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
   return redirect("/auth/sign-in");
 }
