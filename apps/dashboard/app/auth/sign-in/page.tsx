@@ -1,6 +1,11 @@
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@repo/ui";
 import Link from "next/link";
 import { signInWithEmail, signInWithGoogle } from "../actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Sign In',
+}
 
 export default function LoginPage() {
   return (
