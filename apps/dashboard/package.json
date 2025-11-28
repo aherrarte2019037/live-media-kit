@@ -16,7 +16,10 @@
     "@supabase/supabase-js": "catalog:db",
     "next": "catalog:default",
     "react": "catalog:default",
-    "react-dom": "catalog:default"
+    "react-dom": "catalog:default",
+    "react-hook-form": "catalog:default",
+    "zod": "catalog:default",
+    "@hookform/resolvers": "catalog:default"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
