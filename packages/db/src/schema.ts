@@ -11,9 +11,30 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+// --- Enums ---
 export const onboardingSteps = pgEnum("onboarding_steps", ["username", "stats"]);
 export const subscriptionTier = pgEnum("subscription_tier", ["free", "pro"]);
 export const connectedAccountProvider = pgEnum("connected_account_provider", ["youtube"]);
+
+// --- JSON Types ---
+export interface MediaKitTheme {
+  primary: string;
+  radius: number;
+}
+
+export interface AnalyticsStats {
+  subscriberCount: string;
+  videoCount: string;
+  viewCount: string;
+}
+
+export interface AnalyticsHistoryItem {
+  date: string;
+  views: number;
+  watchTimeMinutes: number;
+}
+
+// --- Tables ---
 
 const authSchema = pgSchema("auth");
 const authUsers = authSchema.table("users", {
@@ -82,10 +103,7 @@ export const mediaKits = pgTable(
       .references(() => profiles.id, { onDelete: "cascade" }),
     slug: text("slug").notNull().unique(),
     published: boolean("published").default(false).notNull(),
-    theme: jsonb("theme").$type<{
-      primary?: string;
-      radius?: number;
-    }>(),
+    theme: jsonb("theme").$type<MediaKitTheme>(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -153,21 +171,8 @@ export const analyticsSnapshots = pgTable(
       .notNull()
       .references(() => profiles.id, { onDelete: "cascade" }),
     platformId: text("platform_id").notNull(),
-    stats: jsonb("stats").$type<{
-      subscriberCount: string;
-      videoCount: string;
-      viewCount: string;
-    }>(),
-
-    history:
-      jsonb("history").$type<
-        {
-          date: string;
-          views: number;
-          watchTimeMinutes: number;
-        }[]
-      >(),
-
+    stats: jsonb("stats").$type<AnalyticsStats>(),
+    history: jsonb("history").$type<AnalyticsHistoryItem[]>(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [

@@ -9,17 +9,19 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@hookform/resolvers": "catalog:default",
     "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
     "@supabase/ssr": "catalog:db",
     "@supabase/supabase-js": "catalog:db",
+    "googleapis": "^166.0.0",
     "next": "catalog:default",
     "react": "catalog:default",
     "react-dom": "catalog:default",
     "react-hook-form": "catalog:default",
     "zod": "catalog:default",
-    "@hookform/resolvers": "catalog:default"
+    "date-fns": "catalog:default"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
