@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1764405011398,
+      "tag": "0000_noisy_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764405076428,
+      "tag": "0001_add_complete_onboarding_function",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764405158779,
+      "tag": "0002_add_handle_new_user__function",
+      "breakpoints": true
+    }
+  ]
+}
