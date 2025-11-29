@@ -12,7 +12,7 @@ import {
 } from "@repo/ui";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { type SignUpValues, signUpSchema } from "@/lib/schemas/auth";
+import { SignUpSchema, type SignUpValues } from "@/lib/schemas/auth";
 import { signInWithGoogle, signUpWithEmail } from "../actions";
 
 export default function SignUpPage() {
@@ -21,7 +21,7 @@ export default function SignUpPage() {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<SignUpValues>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
       email: "",
       password: "",

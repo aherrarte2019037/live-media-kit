@@ -12,7 +12,7 @@ import {
 } from "@repo/ui";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { type SignInValues, signInSchema } from "@/lib/schemas/auth";
+import { SignInSchema, type SignInValues } from "@/lib/schemas/auth";
 import { signInWithEmail, signInWithGoogle } from "../actions";
 
 export default function LoginPage() {
@@ -21,7 +21,7 @@ export default function LoginPage() {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<SignInValues>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
       password: "",

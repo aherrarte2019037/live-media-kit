@@ -11,7 +11,7 @@ import {
   FormInput,
 } from "@repo/ui";
 import { useForm } from "react-hook-form";
-import { type UpdatePasswordValues, updatePasswordSchema } from "@/lib/schemas/auth";
+import { UpdatePasswordSchema, type UpdatePasswordValues } from "@/lib/schemas/auth";
 import { resetPassword } from "../actions";
 
 export default function ResetPasswordPage() {
@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<UpdatePasswordValues>({
-    resolver: zodResolver(updatePasswordSchema),
+    resolver: zodResolver(UpdatePasswordSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",

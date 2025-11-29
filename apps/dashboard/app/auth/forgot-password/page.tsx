@@ -12,7 +12,7 @@ import {
 } from "@repo/ui";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { type ForgotPasswordValues, forgotPasswordSchema } from "@/lib/schemas/auth";
+import { ForgotPasswordSchema, type ForgotPasswordValues } from "@/lib/schemas/auth";
 import { forgotPassword } from "../actions";
 
 export default function ForgotPasswordPage() {
@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<ForgotPasswordValues>({
-    resolver: zodResolver(forgotPasswordSchema),
+    resolver: zodResolver(ForgotPasswordSchema),
     defaultValues: {
       email: "",
     },
