@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./tailwind.css";
-import { ThemeProvider } from "@repo/ui";
+import { BaseLayout } from "@repo/ui";
+import { authGuard } from "@/lib/utils/auth-guard";
 
 export const metadata: Metadata = {
   title: {
@@ -10,24 +11,12 @@ export const metadata: Metadata = {
   description: "Manage your verified media kit and partnerships.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          disableTransitionOnChange
-          enableSystem={false}
-          forcedTheme="light"
-        >
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+  await authGuard();
+
+  return <BaseLayout forcedTheme="light">{children}</BaseLayout>;
 }
