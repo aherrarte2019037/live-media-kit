@@ -93,7 +93,7 @@ export async function fetchAndSaveYouTubeStats(
   }
 
   const data = AnalyticsResponseSchema.parse(analyticsResponse.data);
-  const headers = data.columnHeaders || [];
+  const headers = data.columnHeaders;
   const dateIdx = headers.findIndex((h) => h.name === "day");
   const viewsIdx = headers.findIndex((h) => h.name === "views");
   const watchTimeIdx = headers.findIndex((h) => h.name === "estimatedMinutesWatched");
