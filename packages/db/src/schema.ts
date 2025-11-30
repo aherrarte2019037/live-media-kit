@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   jsonb,
@@ -226,3 +226,40 @@ export const accountsDueForUpdate = pgView("accounts_due_for_update", {
       )
     )
 `);
+
+// --- Relations ---
+
+export const profilesRelations = relations(profiles, ({ one, many }) => ({
+  mediaKits: many(mediaKits),
+  connectedAccounts: many(connectedAccounts),
+  analyticsSnapshots: many(analyticsSnapshots),
+  subscription: one(subscriptions),
+}));
+
+export const mediaKitsRelations = relations(mediaKits, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [mediaKits.userId],
+    references: [profiles.id],
+  }),
+}));
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [subscriptions.userId],
+    references: [profiles.id],
+  }),
+}));
+
+export const connectedAccountsRelations = relations(connectedAccounts, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [connectedAccounts.userId],
+    references: [profiles.id],
+  }),
+}));
+
+export const analyticsSnapshotsRelations = relations(analyticsSnapshots, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [analyticsSnapshots.userId],
+    references: [profiles.id],
+  }),
+}));
