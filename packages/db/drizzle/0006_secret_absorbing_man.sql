@@ -1,0 +1,1 @@
+ALTER VIEW "public"."accounts_due_for_update" SET (security_invoker = true);

@@ -6,6 +6,7 @@ import {
   pgPolicy,
   pgSchema,
   pgTable,
+  pgView,
   text,
   timestamp,
   uuid,
@@ -182,3 +183,48 @@ export const analyticsSnapshots = pgTable(
     }),
   ]
 );
+
+// --- Views ---
+
+export const accountsDueForUpdate = pgView("accounts_due_for_update", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id").notNull(),
+  provider: connectedAccountProvider("provider").notNull(),
+  accountId: text("account_id").notNull(),
+  accessToken: text("access_token").notNull(),
+  refreshToken: text("refresh_token"),
+  expiresAt: timestamp("expires_at"),
+  updatedAt: timestamp("updated_at"),
+})
+  .with({ securityInvoker: true })
+  .as(sql`
+  SELECT 
+    ${connectedAccounts.id},
+    ${connectedAccounts.userId},
+    ${connectedAccounts.provider},
+    ${connectedAccounts.accountId},
+    ${connectedAccounts.accessToken},
+    ${connectedAccounts.refreshToken},
+    ${connectedAccounts.expiresAt},
+    ${connectedAccounts.updatedAt}
+  FROM ${connectedAccounts}
+  JOIN ${profiles} ON ${connectedAccounts.userId} = ${profiles.id}
+  WHERE 
+    -- Pro Users: Update if older than 1 hour or never updated
+    (
+      ${profiles.tier} = 'pro' 
+      AND (
+        ${connectedAccounts.updatedAt} < NOW() - INTERVAL '1 hour' 
+        OR ${connectedAccounts.updatedAt} IS NULL
+      )
+    )
+    OR
+    -- Free Users: Update if older than 24 hours or never updated
+    (
+      ${profiles.tier} = 'free' 
+      AND (
+        ${connectedAccounts.updatedAt} < NOW() - INTERVAL '24 hours' 
+        OR ${connectedAccounts.updatedAt} IS NULL
+      )
+    )
+`);

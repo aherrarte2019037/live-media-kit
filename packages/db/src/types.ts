@@ -204,7 +204,27 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      accounts_due_for_update: {
+        Row: {
+          access_token: string | null;
+          account_id: string | null;
+          expires_at: string | null;
+          id: string | null;
+          provider: Database["public"]["Enums"]["connected_account_provider"] | null;
+          refresh_token: string | null;
+          updated_at: string | null;
+          user_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "connected_accounts_user_id_profiles_id_fk";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       complete_onboarding_step: {

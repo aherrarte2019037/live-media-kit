@@ -36,6 +36,20 @@
       "when": 1764441482604,
       "tag": "0004_update_complete_onboarding_function",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1764468542660,
+      "tag": "0005_numerous_white_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1764468841093,
+      "tag": "0006_secret_absorbing_man",
+      "breakpoints": true
     }
   ]
 }
