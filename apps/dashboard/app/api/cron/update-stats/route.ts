@@ -9,16 +9,25 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unauthorized: Invalid or missing CRON_SECRET",
+      },
+      { status: 401 }
+    );
   }
 
   try {
     const accounts = await db.select().from(accountsDueForUpdate);
-    if (accounts.length === 0) {
-      return NextResponse.json({ message: "No accounts due for update." });
-    }
 
-    console.log(`[Cron] Processing ${accounts.length} due accounts...`);
+    if (accounts.length === 0) {
+      return NextResponse.json({
+        success: true,
+        message: "No accounts due for update",
+        data: [],
+      });
+    }
 
     const results = await Promise.allSettled(
       accounts.map(async (account) => {
@@ -48,7 +57,6 @@ export async function GET(request: Request) {
 
           return { userId: account.userId, status: "success" };
         } catch (error) {
-          console.error(`[Cron] Failed user ${account.userId}:`, error);
           return {
             userId: account.userId,
             status: "failed",
@@ -58,15 +66,20 @@ export async function GET(request: Request) {
       })
     );
 
-    const successCount = results.filter((r) => r.status === "fulfilled").length;
+    const _successCount = results.filter((r) => r.status === "fulfilled").length;
 
     return NextResponse.json({
       success: true,
-      message: `Updated ${successCount}/${accounts.length} eligible accounts`,
-      details: results,
+      message: `Processed ${accounts.length} accounts.`,
+      data: results,
     });
   } catch (error) {
-    console.error("[Cron] Critical Failure:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: `Internal Server Error: ${String(error)}`,
+      },
+      { status: 500 }
+    );
   }
 }
