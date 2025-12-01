@@ -11,7 +11,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { timestamps } from "./schema.helpers";
+import { DefaultAnalyticsStats, DefaultKitTheme, timestamps } from "./schema.helpers";
 
 // --- Enums ---
 export const onboardingSteps = pgEnum("onboarding_steps", ["username", "stats", "welcome"]);
@@ -104,7 +104,7 @@ export const mediaKits = pgTable(
     slug: text("slug").notNull().unique(),
     published: boolean("published").default(false).notNull(),
     default: boolean("default").default(false).notNull(),
-    theme: jsonb("theme").$type<MediaKitTheme>(),
+    theme: jsonb("theme").$type<MediaKitTheme>().notNull().default(DefaultKitTheme),
     ...timestamps,
   },
   (table) => [
@@ -170,11 +170,7 @@ export const analyticsSnapshots = pgTable(
       .notNull()
       .references(() => profiles.id, { onDelete: "cascade" }),
     platformId: text("platform_id").notNull(),
-    stats: jsonb("stats").$type<AnalyticsStats>().notNull().default({
-      subscriberCount: 0,
-      videoCount: 0,
-      viewCount: 0,
-    }),
+    stats: jsonb("stats").$type<AnalyticsStats>().notNull().default(DefaultAnalyticsStats),
     history: jsonb("history").$type<AnalyticsHistoryItem[]>().notNull().default([]),
     ...timestamps,
   },

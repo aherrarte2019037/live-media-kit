@@ -107,7 +107,7 @@ export type Database = {
           id: string;
           published: boolean;
           slug: string;
-          theme: Json | null;
+          theme: Json;
           updated_at: string;
           user_id: string;
         };
@@ -118,7 +118,7 @@ export type Database = {
           id?: string;
           published?: boolean;
           slug: string;
-          theme?: Json | null;
+          theme?: Json;
           updated_at?: string;
           user_id: string;
         };
@@ -129,7 +129,7 @@ export type Database = {
           id?: string;
           published?: boolean;
           slug?: string;
-          theme?: Json | null;
+          theme?: Json;
           updated_at?: string;
           user_id?: string;
         };
