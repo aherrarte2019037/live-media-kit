@@ -1,11 +1,11 @@
 "use server";
 
-import { db, profiles } from "@repo/db";
+import { db, Profiles } from "@repo/db";
 import { eq } from "drizzle-orm";
 
 export async function getCreatorEmail(profileId: string) {
-  const profile = await db.query.profiles.findFirst({
-    where: eq(profiles.id, profileId),
+  const profile = await db.query.Profiles.findFirst({
+    where: eq(Profiles.id, profileId),
     columns: {
       email: true,
     },

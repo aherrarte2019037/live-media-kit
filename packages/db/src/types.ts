@@ -158,7 +158,7 @@ export type Database = {
           onboarding_steps: Database["public"]["Enums"]["onboarding_steps"][];
           tier: Database["public"]["Enums"]["subscription_tier"];
           updated_at: string;
-          username: string | null;
+          username: string;
         };
         Insert: {
           created_at?: string;
@@ -168,7 +168,7 @@ export type Database = {
           onboarding_steps?: Database["public"]["Enums"]["onboarding_steps"][];
           tier?: Database["public"]["Enums"]["subscription_tier"];
           updated_at?: string;
-          username?: string | null;
+          username?: string;
         };
         Update: {
           created_at?: string;
@@ -178,7 +178,7 @@ export type Database = {
           onboarding_steps?: Database["public"]["Enums"]["onboarding_steps"][];
           tier?: Database["public"]["Enums"]["subscription_tier"];
           updated_at?: string;
-          username?: string | null;
+          username?: string;
         };
         Relationships: [];
       };

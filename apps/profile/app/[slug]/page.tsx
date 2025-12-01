@@ -30,8 +30,8 @@ export default async function MediaKitPage({ params }: PageProps) {
   const data = await getPublishedMediaKit(slug);
   if (!data) notFound();
 
-  const { kit, profile, snapshot } = data;
-  const stats = snapshot.stats;
+  const { kit, profile, analyticsProviders } = data;
+  const stats = analyticsProviders.youtube.stats;
 
   const primary = kit.theme.primary;
   const radius = kit.theme.radius;

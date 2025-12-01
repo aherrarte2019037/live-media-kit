@@ -1,4 +1,4 @@
-import { accountsDueForUpdate, db } from "@repo/db";
+import { AccountsDueForUpdate, db } from "@repo/db";
 import { addMinutes, isBefore } from "date-fns";
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const accounts = await db.select().from(accountsDueForUpdate);
+    const accounts = await db.select().from(AccountsDueForUpdate);
 
     if (accounts.length === 0) {
       return NextResponse.json({

@@ -1,4 +1,4 @@
-import { type AnalyticsStats, analyticsSnapshots, connectedAccounts, db } from "@repo/db";
+import { AnalyticsSnapshots, type AnalyticsStats, ConnectedAccounts, db } from "@repo/db";
 import { addSeconds, format, subDays } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { google } from "googleapis";
@@ -66,8 +66,8 @@ export async function fetchAndSaveYouTubeStats(
     sort: "day",
   });
 
-  const existingAccount = await db.query.connectedAccounts.findFirst({
-    where: and(eq(connectedAccounts.userId, userId), eq(connectedAccounts.provider, "youtube")),
+  const existingAccount = await db.query.ConnectedAccounts.findFirst({
+    where: and(eq(ConnectedAccounts.userId, userId), eq(ConnectedAccounts.provider, "youtube")),
   });
 
   const accountData = {
@@ -79,11 +79,11 @@ export async function fetchAndSaveYouTubeStats(
 
   if (existingAccount) {
     await db
-      .update(connectedAccounts)
+      .update(ConnectedAccounts)
       .set(accountData)
-      .where(eq(connectedAccounts.id, existingAccount.id));
+      .where(eq(ConnectedAccounts.id, existingAccount.id));
   } else {
-    await db.insert(connectedAccounts).values({
+    await db.insert(ConnectedAccounts).values({
       userId,
       provider: "youtube",
       accountId: channelId,
@@ -113,7 +113,7 @@ export async function fetchAndSaveYouTubeStats(
     mediaCount: 0,
   };
 
-  await db.insert(analyticsSnapshots).values({
+  await db.insert(AnalyticsSnapshots).values({
     userId,
     platformId: channelId,
     provider: "youtube",

@@ -1,4 +1,4 @@
-import { analyticsSnapshots, db, mediaKits, profiles } from "@repo/db";
+import { AnalyticsSnapshots, db, MediaKits, Profiles } from "@repo/db";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import { shortNumber } from "@repo/utils";
 import { and, desc, eq } from "drizzle-orm";
@@ -17,15 +17,15 @@ export default async function DashboardPage() {
   if (!user) redirect("/auth/sign-in");
 
   const [profile, kit, snapshot] = await Promise.all([
-    db.query.profiles.findFirst({
-      where: eq(profiles.id, user.id),
+    db.query.Profiles.findFirst({
+      where: eq(Profiles.id, user.id),
     }),
-    db.query.mediaKits.findFirst({
-      where: and(eq(mediaKits.userId, user.id), eq(mediaKits.default, true)),
+    db.query.MediaKits.findFirst({
+      where: and(eq(MediaKits.userId, user.id), eq(MediaKits.default, true)),
     }),
-    db.query.analyticsSnapshots.findFirst({
-      where: eq(analyticsSnapshots.userId, user.id),
-      orderBy: [desc(analyticsSnapshots.createdAt)],
+    db.query.AnalyticsSnapshots.findFirst({
+      where: eq(AnalyticsSnapshots.userId, user.id),
+      orderBy: [desc(AnalyticsSnapshots.createdAt)],
     }),
   ]);
 

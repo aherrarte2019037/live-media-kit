@@ -1,12 +1,29 @@
+import type { InferSelectModel } from "drizzle-orm";
 import { timestamp } from "drizzle-orm/pg-core";
-import type { AnalyticsStats, KitBlock, MediaKitTheme } from "./schema";
+import type {
+  AnalyticsHistoryItem,
+  AnalyticsStats,
+  KitBlock,
+  MediaKitTheme,
+  Profiles,
+} from "./schema";
 
+// -- Types --
+export type AnalyticsProviders = Record<
+  string,
+  { stats: AnalyticsStats; history: AnalyticsHistoryItem[] }
+>;
+
+export type Profile = InferSelectModel<typeof Profiles>;
+
+// -- Common Columns --
 export const timestamps = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 };
 
+// -- Default Values --
 export const DefaultKitTheme: MediaKitTheme = {
   primary: "#171717",
   radius: 0.5,

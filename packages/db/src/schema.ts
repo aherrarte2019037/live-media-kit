@@ -29,7 +29,9 @@ export const connectedAccountProvider = pgEnum("connected_account_provider", [
 export const metricType = pgEnum("metric_type", ["views", "subscribers", "watchTime", "all"]);
 
 // --- JSON Types ---
-export type ProfileBlockData = { [k: string]: never };
+export interface ProfileBlockData {
+  displayName?: string;
+}
 
 export interface StatsBlockData {
   provider: (typeof connectedAccountProvider.enumValues)[number];
@@ -89,19 +91,19 @@ export type BlockType = KitBlock["type"];
 
 // --- Tables ---
 
-const authSchema = pgSchema("auth");
-const authUsers = authSchema.table("users", {
+const AuthSchema = pgSchema("auth");
+const AuthUsers = AuthSchema.table("users", {
   id: uuid("id").primaryKey(),
 });
 
-export const profiles = pgTable(
+export const Profiles = pgTable(
   "profiles",
   {
     id: uuid("id")
       .primaryKey()
-      .references(() => authUsers.id, { onDelete: "cascade" }),
+      .references(() => AuthUsers.id, { onDelete: "cascade" }),
     email: text("email").notNull(),
-    username: text("username").unique(),
+    username: text("username").unique().notNull().default(""),
     tier: subscriptionTier("tier").default("free").notNull(),
     onboardingSteps: onboardingSteps("onboarding_steps").array().default([]).notNull(),
     ...timestamps,
@@ -122,13 +124,13 @@ export const profiles = pgTable(
   ]
 );
 
-export const subscriptions = pgTable(
+export const Subscriptions = pgTable(
   "subscriptions",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" })
+      .references(() => Profiles.id, { onDelete: "cascade" })
       .unique(),
     provider: text("provider").notNull(),
     customerId: text("customer_id").unique(),
@@ -145,13 +147,13 @@ export const subscriptions = pgTable(
   ]
 );
 
-export const mediaKits = pgTable(
+export const MediaKits = pgTable(
   "media_kits",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => Profiles.id, { onDelete: "cascade" }),
     slug: text("slug").notNull().unique(),
     published: boolean("published").default(false).notNull(),
     default: boolean("default").default(false).notNull(),
@@ -183,13 +185,13 @@ export const mediaKits = pgTable(
   ]
 );
 
-export const connectedAccounts = pgTable(
+export const ConnectedAccounts = pgTable(
   "connected_accounts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => Profiles.id, { onDelete: "cascade" }),
     provider: connectedAccountProvider("provider").notNull(),
     accountId: text("account_id").notNull(),
     accessToken: text("access_token").notNull(),
@@ -214,13 +216,13 @@ export const connectedAccounts = pgTable(
   ]
 );
 
-export const analyticsSnapshots = pgTable(
+export const AnalyticsSnapshots = pgTable(
   "analytics_snapshots",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => Profiles.id, { onDelete: "cascade" }),
     provider: connectedAccountProvider("provider").notNull(),
     platformId: text("platform_id").notNull(),
     stats: jsonb("stats").$type<AnalyticsStats>().notNull().default(DefaultAnalyticsStats),
@@ -237,7 +239,7 @@ export const analyticsSnapshots = pgTable(
 
 // --- Views ---
 
-export const accountsDueForUpdate = pgView("accounts_due_for_update", {
+export const AccountsDueForUpdate = pgView("accounts_due_for_update", {
   id: uuid("id").primaryKey(),
   userId: uuid("user_id").notNull(),
   provider: connectedAccountProvider("provider").notNull(),
@@ -250,69 +252,69 @@ export const accountsDueForUpdate = pgView("accounts_due_for_update", {
   .with({ securityInvoker: true })
   .as(sql`
   SELECT 
-    ${connectedAccounts.id},
-    ${connectedAccounts.userId},
-    ${connectedAccounts.provider},
-    ${connectedAccounts.accountId},
-    ${connectedAccounts.accessToken},
-    ${connectedAccounts.refreshToken},
-    ${connectedAccounts.expiresAt},
-    ${connectedAccounts.updatedAt}
-  FROM ${connectedAccounts}
-  JOIN ${profiles} ON ${connectedAccounts.userId} = ${profiles.id}
+    ${ConnectedAccounts.id},
+    ${ConnectedAccounts.userId},
+    ${ConnectedAccounts.provider},
+    ${ConnectedAccounts.accountId},
+    ${ConnectedAccounts.accessToken},
+    ${ConnectedAccounts.refreshToken},
+    ${ConnectedAccounts.expiresAt},
+    ${ConnectedAccounts.updatedAt}
+  FROM ${ConnectedAccounts}
+  JOIN ${Profiles} ON ${ConnectedAccounts.userId} = ${Profiles.id}
   WHERE 
     -- Pro Users: Update if older than 1 hour or never updated
     (
-      ${profiles.tier} = 'pro' 
+      ${Profiles.tier} = 'pro' 
       AND (
-        ${connectedAccounts.updatedAt} < NOW() - INTERVAL '1 hour' 
-        OR ${connectedAccounts.updatedAt} IS NULL
+        ${ConnectedAccounts.updatedAt} < NOW() - INTERVAL '1 hour' 
+        OR ${ConnectedAccounts.updatedAt} IS NULL
       )
     )
     OR
     -- Free Users: Update if older than 24 hours or never updated
     (
-      ${profiles.tier} = 'free' 
+      ${Profiles.tier} = 'free' 
       AND (
-        ${connectedAccounts.updatedAt} < NOW() - INTERVAL '24 hours' 
-        OR ${connectedAccounts.updatedAt} IS NULL
+        ${ConnectedAccounts.updatedAt} < NOW() - INTERVAL '24 hours' 
+        OR ${ConnectedAccounts.updatedAt} IS NULL
       )
     )
 `);
 
 // --- Relations ---
 
-export const profilesRelations = relations(profiles, ({ one, many }) => ({
-  mediaKits: many(mediaKits),
-  connectedAccounts: many(connectedAccounts),
-  analyticsSnapshots: many(analyticsSnapshots),
-  subscription: one(subscriptions),
+export const ProfilesRelations = relations(Profiles, ({ one, many }) => ({
+  mediaKits: many(MediaKits),
+  connectedAccounts: many(ConnectedAccounts),
+  analyticsSnapshots: many(AnalyticsSnapshots),
+  subscription: one(Subscriptions),
 }));
 
-export const mediaKitsRelations = relations(mediaKits, ({ one }) => ({
-  profile: one(profiles, {
-    fields: [mediaKits.userId],
-    references: [profiles.id],
+export const MediaKitsRelations = relations(MediaKits, ({ one }) => ({
+  profile: one(Profiles, {
+    fields: [MediaKits.userId],
+    references: [Profiles.id],
   }),
 }));
 
-export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
-  profile: one(profiles, {
-    fields: [subscriptions.userId],
-    references: [profiles.id],
+export const SubscriptionsRelations = relations(Subscriptions, ({ one }) => ({
+  profile: one(Profiles, {
+    fields: [Subscriptions.userId],
+    references: [Profiles.id],
   }),
 }));
 
-export const connectedAccountsRelations = relations(connectedAccounts, ({ one }) => ({
-  profile: one(profiles, {
-    fields: [connectedAccounts.userId],
-    references: [profiles.id],
+export const ConnectedAccountsRelations = relations(ConnectedAccounts, ({ one }) => ({
+  profile: one(Profiles, {
+    fields: [ConnectedAccounts.userId],
+    references: [Profiles.id],
   }),
 }));
 
-export const analyticsSnapshotsRelations = relations(analyticsSnapshots, ({ one }) => ({
-  profile: one(profiles, {
-    fields: [analyticsSnapshots.userId],
-    references: [profiles.id],
+export const AnalyticsSnapshotsRelations = relations(AnalyticsSnapshots, ({ one }) => ({
+  profile: one(Profiles, {
+    fields: [AnalyticsSnapshots.userId],
+    references: [Profiles.id],
   }),
 }));

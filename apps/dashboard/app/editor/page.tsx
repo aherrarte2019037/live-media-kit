@@ -1,4 +1,4 @@
-import { db, mediaKits } from "@repo/db";
+import { db, MediaKits } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { EditorForm } from "@/components/editor-form";
@@ -11,8 +11,8 @@ export default async function EditorPage() {
 
   if (!user) redirect("/auth/sign-in");
 
-  const kit = await db.query.mediaKits.findFirst({
-    where: and(eq(mediaKits.userId, user.id), eq(mediaKits.default, true)),
+  const kit = await db.query.MediaKits.findFirst({
+    where: and(eq(MediaKits.userId, user.id), eq(MediaKits.default, true)),
   });
 
   if (!kit) redirect("/");

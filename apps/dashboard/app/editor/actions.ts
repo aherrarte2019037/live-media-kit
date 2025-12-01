@@ -1,6 +1,6 @@
 "use server";
 
-import { db, mediaKits } from "@repo/db";
+import { db, MediaKits } from "@repo/db";
 import { HexColorSchema } from "@repo/utils";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -41,12 +41,12 @@ export async function updateKitTheme(
 
   try {
     await db
-      .update(mediaKits)
+      .update(MediaKits)
       .set({
         theme: { primary, radius },
         updatedAt: new Date(),
       })
-      .where(eq(mediaKits.id, kitId) && eq(mediaKits.userId, user.id));
+      .where(eq(MediaKits.id, kitId) && eq(MediaKits.userId, user.id));
 
     revalidatePath("/editor");
     return { success: true };

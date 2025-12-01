@@ -1,15 +1,15 @@
-import { db, mediaKits, profiles } from "@repo/db";
+import { db, MediaKits, Profiles } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 export async function createDefaultKit(userId: string) {
-  const existingDefaultKit = await db.query.mediaKits.findFirst({
-    where: and(eq(mediaKits.userId, userId), eq(mediaKits.default, true)),
+  const existingDefaultKit = await db.query.MediaKits.findFirst({
+    where: and(eq(MediaKits.userId, userId), eq(MediaKits.default, true)),
   });
 
   if (existingDefaultKit) return existingDefaultKit;
 
-  const profile = await db.query.profiles.findFirst({
-    where: eq(profiles.id, userId),
+  const profile = await db.query.Profiles.findFirst({
+    where: eq(Profiles.id, userId),
     columns: { username: true },
   });
 
@@ -17,7 +17,7 @@ export async function createDefaultKit(userId: string) {
   if (!profile.username) throw new Error("User has no username");
 
   const [newKit] = await db
-    .insert(mediaKits)
+    .insert(MediaKits)
     .values({
       userId,
       slug: profile.username,
