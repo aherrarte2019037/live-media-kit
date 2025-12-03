@@ -134,6 +134,13 @@
       "when": 1764724774668,
       "tag": "0018_ambiguous_tempest",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1764775179579,
+      "tag": "0019_tricky_wrecker",
+      "breakpoints": true
     }
   ]
 }

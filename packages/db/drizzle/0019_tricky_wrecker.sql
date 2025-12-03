@@ -1,0 +1,1 @@
+ALTER TABLE "analytics_snapshots" ALTER COLUMN "stats" DROP DEFAULT;
