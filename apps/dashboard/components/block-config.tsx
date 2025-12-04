@@ -6,7 +6,7 @@ import { Button, FormInput, FormSelect } from "@repo/ui";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Case, Default, Switch } from "react-if";
-import { getProviderMetricOptions } from "@/lib/utils/platform-metric-options";
+import { getProviderMetricOptions, ProviderOptions } from "@/lib/utils/platform-metric-options";
 import {
   ChartSchema,
   ContactSchema,
@@ -72,10 +72,7 @@ export function BlockConfig({ block, onSave, onCancel }: Props) {
                   name="provider"
                   label="Platform"
                   placeholder="Select platform"
-                  options={[
-                    { label: "YouTube", value: "youtube" },
-                    { label: "Instagram (Coming Soon)", value: "instagram", disabled: true },
-                  ]}
+                  options={ProviderOptions}
                 />
 
                 <FormSelect
@@ -100,10 +97,7 @@ export function BlockConfig({ block, onSave, onCancel }: Props) {
                   name="provider"
                   label="Platform"
                   placeholder="Select platform"
-                  options={[
-                    { label: "YouTube", value: "youtube" },
-                    { label: "Instagram (Coming Soon)", value: "instagram", disabled: true },
-                  ]}
+                  options={ProviderOptions}
                 />
 
                 <FormSelect
