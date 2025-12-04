@@ -1,6 +1,7 @@
 import type {
   AnalyticsProvider,
   ChartBlockData,
+  ContactBlockData,
   CustomBlockData,
   KitBlock,
   Profile,
@@ -10,11 +11,11 @@ import type {
 } from "@repo/db";
 import { Case, Default, Switch } from "react-if";
 import { ChartBlock } from "./blocks/chart-block";
+import { ContactBlock } from "./blocks/contact-block";
 import { CustomBlock } from "./blocks/custom-block";
 import { ProfileBlock } from "./blocks/profile-block";
 import { SeparatorBlock } from "./blocks/separator-block";
 import { StatsBlock } from "./blocks/stats-block";
-import { ContactButton } from "./contact-button";
 
 interface BlockRendererProps {
   block: KitBlock;
@@ -46,8 +47,9 @@ export function BlockRenderer({ block, profile, analyticsProvider }: BlockRender
       </Case>
 
       <Case condition={block.type === "contact"}>
-        <ContactButton
+        <ContactBlock
           profileId={profile.id}
+          data={block.data as ContactBlockData}
           className="w-full h-12 text-base font-semibold shadow-sm text-white bg-primary hover:bg-(--primary)/90 rounded-(--radius)"
         />
       </Case>

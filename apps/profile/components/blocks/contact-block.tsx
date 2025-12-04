@@ -1,5 +1,6 @@
 "use client";
 
+import type { ContactBlockData } from "@repo/db";
 import { Button } from "@repo/ui";
 import { Check, Copy, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
@@ -8,12 +9,13 @@ import { When } from "react-if";
 import { useCopyToClipboard } from "usehooks-ts";
 import { getCreatorEmail } from "@/app/[slug]/actions";
 
-interface ContactButtonProps {
+interface Props {
   profileId: string;
+  data: ContactBlockData;
   className?: string;
 }
 
-export function ContactButton({ profileId, className }: ContactButtonProps) {
+export function ContactBlock({ profileId, data, className }: Props) {
   const [email, setEmail] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [_, copy] = useCopyToClipboard();
@@ -66,7 +68,7 @@ export function ContactButton({ profileId, className }: ContactButtonProps) {
       <When condition={isPending}>
         <Loader2 className="mr-2 size-4 animate-spin" />
       </When>
-      <When condition={!isPending}>Contact Me</When>
+      <When condition={!isPending}>{data.buttonText}</When>
     </Button>
   );
 }
