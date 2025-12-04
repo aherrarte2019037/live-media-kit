@@ -5,6 +5,7 @@ import { Edit, Settings } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CopyMediaKitLink } from "@/components/copy-media-kit-link";
+import { UpgradeButton } from "@/components/upgrade-button";
 import { getCurrentUser } from "@/lib/utils/current-user";
 import { createClient } from "@/lib/utils/supabase/server";
 import { signOut } from "./auth/actions";
@@ -40,6 +41,20 @@ export default async function DashboardPage() {
             <Button variant="outline">Sign Out</Button>
           </form>
         </div>
+      </div>
+
+      <div className="flex gap-4">
+        <UpgradeButton
+          userId={user.id}
+          variantId="12345" // Monthly ID
+          buttonText="Get Pro ($7/mo)"
+        />
+        <UpgradeButton
+          userId={user.id}
+          variantId="67890" // Annual ID
+          buttonText="Get Annual ($70/yr)"
+          className="bg-green-600 hover:bg-green-700"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
