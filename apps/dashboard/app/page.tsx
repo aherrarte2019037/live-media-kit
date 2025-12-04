@@ -42,38 +42,36 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Distribution</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CopyMediaKitLink url={kitUrl} />
-            </CardContent>
-          </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CopyMediaKitLink url={kitUrl} />
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Customization</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Update your kit's appearance and primary color.
-              </p>
-              <div className="flex gap-2">
-                <Button className="w-full" asChild>
-                  <Link href="/editor">
-                    <Edit className="mr-2 size-4" /> Open Editor
-                  </Link>
-                </Button>
-                <Button variant="outline" size="icon" disabled>
-                  <Settings className="size-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Customization</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Update your kit's appearance and primary color.
+            </p>
+            <div className="flex gap-2">
+              <Button className="w-full" asChild>
+                <Link href="/editor">
+                  <Edit className="mr-2 size-4" /> Open Editor
+                </Link>
+              </Button>
+              <Button variant="outline" size="icon" disabled>
+                <Settings className="size-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

@@ -1,5 +1,5 @@
 import { timestamp } from "drizzle-orm/pg-core";
-import type { KitBlock, MediaKitTheme } from "./schema/media-kits.sql";
+import type { KitBlock, MediaKitTheme } from "./media-kits.sql";
 
 // -- Common Columns --
 export const timestamps = {

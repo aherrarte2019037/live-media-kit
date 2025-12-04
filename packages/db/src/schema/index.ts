@@ -3,4 +3,6 @@ export * from "./analytics.sql";
 export * from "./enums.sql";
 export * from "./media-kits.sql";
 export * from "./relations.sql";
+export * from "./schema.constants";
+export * from "./schema.helpers";
 export * from "./views.sql";

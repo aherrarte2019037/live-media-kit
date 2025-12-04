@@ -1,5 +1,5 @@
 import type { ProfileBlockData } from "@repo/db";
-import type { Profile } from "@repo/db/src/schema.helpers";
+import type { Profile } from "@repo/db/src/schema/account.sql";
 import { ShieldCheck } from "lucide-react";
 
 interface Props {

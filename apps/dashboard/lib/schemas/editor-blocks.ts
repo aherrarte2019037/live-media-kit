@@ -1,3 +1,10 @@
+import {
+  InstagramChartMetrics,
+  InstagramStatMetrics,
+  ProviderList,
+  YouTubeChartMetrics,
+  YouTubeStatMetrics,
+} from "@repo/db";
 import { z } from "zod";
 
 export const SeparatorSchema = z.object({
@@ -5,13 +12,13 @@ export const SeparatorSchema = z.object({
 });
 
 export const StatsSchema = z.object({
-  provider: z.enum(["youtube", "instagram", "tiktok"]),
-  metric: z.enum(["views", "subscribers", "watchTime", "all"]),
+  provider: z.enum(ProviderList),
+  metric: z.enum([...YouTubeStatMetrics, ...InstagramStatMetrics]),
 });
 
 export const ChartSchema = z.object({
-  provider: z.enum(["youtube", "instagram", "tiktok"]),
-  metric: z.enum(["views", "subscribers", "watchTime", "all"]),
+  provider: z.enum(ProviderList),
+  metric: z.enum([...YouTubeChartMetrics, ...InstagramChartMetrics]),
   days: z.number().min(7).max(365).default(30),
 });
 

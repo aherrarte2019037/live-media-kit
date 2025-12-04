@@ -1,23 +1,29 @@
 import { sql } from "drizzle-orm";
 import { boolean, jsonb, pgPolicy, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { DefaultKitTheme, timestamps } from "../schema.helpers";
 import { Profiles } from "./account.sql";
-import type { connectedAccountProvider, metricType } from "./enums.sql";
+import type {
+  InstagramChartMetric,
+  InstagramStatMetric,
+  YouTubeChartMetric,
+  YouTubeStatMetric,
+} from "./analytics.sql";
+import type { connectedAccountProvider } from "./enums.sql";
+import { DefaultKitTheme, timestamps } from "./schema.helpers";
 
 export interface ProfileBlockData {
   displayName?: string;
 }
 
-export interface StatsBlockData {
+export type StatsBlockData = {
   provider: (typeof connectedAccountProvider.enumValues)[number];
-  metric: (typeof metricType.enumValues)[number];
-}
+  metric: YouTubeStatMetric | InstagramStatMetric;
+};
 
-export interface ChartBlockData {
+export type ChartBlockData = {
   provider: (typeof connectedAccountProvider.enumValues)[number];
-  metric: (typeof metricType.enumValues)[number];
+  metric: YouTubeChartMetric | InstagramChartMetric;
   days: number;
-}
+};
 
 export interface SeparatorBlockData {
   title: string;
@@ -50,6 +56,8 @@ export type KitBlock =
   | { id: string; type: "contact"; data: ContactBlockData };
 
 export type BlockType = KitBlock["type"];
+
+export type StatsOrChartBlockType = Extract<KitBlock, { type: "stats" | "chart" }>["type"];
 
 export const MediaKits = pgTable(
   "media_kits",

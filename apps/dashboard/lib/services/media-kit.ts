@@ -1,5 +1,4 @@
-import { db, MediaKits, Profiles } from "@repo/db";
-import { GetDefaultKitBlocks } from "@repo/db/src/schema.helpers";
+import { db, GetDefaultKitBlocks, MediaKits, Profiles } from "@repo/db";
 import { and, eq } from "drizzle-orm";
 
 export async function createDefaultKit(userId: string) {

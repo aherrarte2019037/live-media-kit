@@ -4,8 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { KitBlock } from "@repo/db";
 import { Button, FormInput, FormSelect } from "@repo/ui";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Case, Default, Switch } from "react-if";
+import { getProviderMetricOptions } from "@/lib/utils/platform-metric-options";
 import {
   ChartSchema,
   ContactSchema,
@@ -36,6 +37,11 @@ export function BlockConfig({ block, onSave, onCancel }: Props) {
     defaultValues: block.data,
   });
 
+  const selectedProvider = useWatch({
+    control: form.control,
+    name: "provider",
+  });
+
   useEffect(() => {
     form.reset(block.data);
   }, [block.data, form]);
@@ -56,45 +62,70 @@ export function BlockConfig({ block, onSave, onCancel }: Props) {
           />
         </Case>
 
-        <Case condition={block.type === "stats" || block.type === "chart"}>
-          <div className="space-y-4">
-            <FormSelect
-              control={form.control}
-              name="provider"
-              label="Platform"
-              placeholder="Select platform"
-              options={[
-                { label: "YouTube", value: "youtube" },
-                { label: "Instagram (Coming Soon)", value: "instagram", disabled: true },
-                { label: "TikTok (Coming Soon)", value: "tiktok", disabled: true },
-              ]}
-            />
+        <Case condition={block.type === "stats"}>
+          {() => {
+            const metricOptions = getProviderMetricOptions(selectedProvider, "stats");
+            return (
+              <div className="space-y-4">
+                <FormSelect
+                  control={form.control}
+                  name="provider"
+                  label="Platform"
+                  placeholder="Select platform"
+                  options={[
+                    { label: "YouTube", value: "youtube" },
+                    { label: "Instagram (Coming Soon)", value: "instagram", disabled: true },
+                  ]}
+                />
 
-            <FormSelect
-              control={form.control}
-              name="metric"
-              label="Metric"
-              placeholder="Select metric"
-              options={[
-                { label: "All Stats (Grid)", value: "all" },
-                { label: "Subscribers Only", value: "subscribers" },
-                { label: "Views Only", value: "views" },
-                ...(block.type === "chart" ? [{ label: "Watch Time", value: "watchTime" }] : []),
-              ]}
-            />
+                <FormSelect
+                  control={form.control}
+                  name="metric"
+                  label="Metric"
+                  placeholder="Select metric"
+                  options={metricOptions}
+                />
+              </div>
+            );
+          }}
+        </Case>
 
-            {block.type === "chart" && (
-              <FormInput
-                control={form.control}
-                name="days"
-                label="Time Range (Days)"
-                type="number"
-                min={7}
-                max={365}
-                onChange={(e) => form.setValue("days", Number(e.target.value))}
-              />
-            )}
-          </div>
+        <Case condition={block.type === "chart"}>
+          {() => {
+            const metricOptions = getProviderMetricOptions(selectedProvider, "chart");
+            return (
+              <div className="space-y-4">
+                <FormSelect
+                  control={form.control}
+                  name="provider"
+                  label="Platform"
+                  placeholder="Select platform"
+                  options={[
+                    { label: "YouTube", value: "youtube" },
+                    { label: "Instagram (Coming Soon)", value: "instagram", disabled: true },
+                  ]}
+                />
+
+                <FormSelect
+                  control={form.control}
+                  name="metric"
+                  label="Metric"
+                  placeholder="Select metric"
+                  options={metricOptions}
+                />
+
+                <FormInput
+                  control={form.control}
+                  name="days"
+                  label="Time Range (Days)"
+                  type="number"
+                  min={7}
+                  max={365}
+                  onChange={(e) => form.setValue("days", Number(e.target.value))}
+                />
+              </div>
+            );
+          }}
         </Case>
 
         <Case condition={block.type === "custom"}>

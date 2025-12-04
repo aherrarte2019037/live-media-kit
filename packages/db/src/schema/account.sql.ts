@@ -1,7 +1,7 @@
 import { type InferSelectModel, sql } from "drizzle-orm";
 import { pgPolicy, pgSchema, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { timestamps } from "../schema.helpers";
 import { connectedAccountProvider, onboardingSteps, subscriptionTier } from "./enums.sql";
+import { timestamps } from "./schema.helpers";
 
 const AuthSchema = pgSchema("auth");
 

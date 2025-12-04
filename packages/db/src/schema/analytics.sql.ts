@@ -1,8 +1,14 @@
 import { sql } from "drizzle-orm";
 import { jsonb, pgPolicy, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { timestamps } from "../schema.helpers";
 import { Profiles } from "./account.sql";
 import { connectedAccountProvider } from "./enums.sql";
+import type {
+  InstagramChartMetrics,
+  InstagramStatMetrics,
+  YouTubeChartMetrics,
+  YouTubeStatMetrics,
+} from "./schema.constants";
+import { timestamps } from "./schema.helpers";
 
 export type AnalyticsProvider = Record<
   string,
@@ -23,9 +29,27 @@ export interface YouTubeHistoryItem {
   likes: number;
 }
 
-export type PlatformStats = YouTubeStats;
+export interface InstagramStats {
+  followers: number;
+  likes: number;
+}
 
-export type PlatformHistoryItem = YouTubeHistoryItem;
+export interface InstagramHistoryItem {
+  date: string;
+  followers: number;
+  likes: number;
+}
+
+export type PlatformStats = YouTubeStats | InstagramStats;
+export type PlatformHistoryItem = YouTubeHistoryItem | InstagramHistoryItem;
+
+export type YouTubeStatMetric = (typeof YouTubeStatMetrics)[number];
+
+export type InstagramStatMetric = (typeof InstagramStatMetrics)[number];
+
+export type YouTubeChartMetric = (typeof YouTubeChartMetrics)[number];
+
+export type InstagramChartMetric = (typeof InstagramChartMetrics)[number];
 
 export const AnalyticsSnapshots = pgTable(
   "analytics_snapshots",

@@ -1,0 +1,1 @@
+DROP TYPE "public"."metric_type";
