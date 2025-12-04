@@ -1,7 +1,6 @@
 export const ProviderList = ["youtube", "instagram"] as const;
 
 export const YouTubeStatMetricsList = ["subscribers", "views", "videos", "all"] as const;
-
 export const YouTubeChartMetricsList = [
   "views",
   "watchTimeMinutes",
@@ -10,5 +9,9 @@ export const YouTubeChartMetricsList = [
 ] as const;
 
 export const InstagramStatMetricsList = ["followers", "likes", "all"] as const;
-
 export const InstagramChartMetricsList = ["followers", "likes"] as const;
+
+export const SubscriptionTierList = ["free", "pro"] as const;
+export const SubscriptionIntervalList = ["month", "year"] as const;
+
+export const OnboardingStepList = ["username", "stats", "welcome"] as const;

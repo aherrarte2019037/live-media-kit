@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { pgPolicy, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { Profiles } from "./account.sql";
+import { subscriptionInterval } from "./enums.sql";
 import { timestamps } from "./schema.helpers";
 
 export const Subscriptions = pgTable(
@@ -15,6 +16,7 @@ export const Subscriptions = pgTable(
     customerId: text("customer_id").unique(),
     subscriptionId: text("subscription_id").unique(),
     priceId: text("price_id"),
+    interval: subscriptionInterval("interval"),
     currentPeriodEnd: timestamp("current_period_end"),
     ...timestamps,
   },

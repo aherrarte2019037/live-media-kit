@@ -189,6 +189,7 @@ export type Database = {
           customer_id: string | null;
           deleted_at: string | null;
           id: string;
+          interval: Database["public"]["Enums"]["subscription_interval"] | null;
           price_id: string | null;
           provider: string;
           subscription_id: string | null;
@@ -201,6 +202,7 @@ export type Database = {
           customer_id?: string | null;
           deleted_at?: string | null;
           id?: string;
+          interval?: Database["public"]["Enums"]["subscription_interval"] | null;
           price_id?: string | null;
           provider: string;
           subscription_id?: string | null;
@@ -213,6 +215,7 @@ export type Database = {
           customer_id?: string | null;
           deleted_at?: string | null;
           id?: string;
+          interval?: Database["public"]["Enums"]["subscription_interval"] | null;
           price_id?: string | null;
           provider?: string;
           subscription_id?: string | null;
@@ -262,6 +265,7 @@ export type Database = {
     Enums: {
       connected_account_provider: "youtube" | "instagram";
       onboarding_steps: "username" | "stats" | "welcome";
+      subscription_interval: "month" | "year";
       subscription_tier: "free" | "pro";
     };
     CompositeTypes: {
@@ -390,6 +394,7 @@ export const Constants = {
     Enums: {
       connected_account_provider: ["youtube", "instagram"],
       onboarding_steps: ["username", "stats", "welcome"],
+      subscription_interval: ["month", "year"],
       subscription_tier: ["free", "pro"],
     },
   },
