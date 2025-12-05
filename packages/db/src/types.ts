@@ -185,40 +185,40 @@ export type Database = {
       subscriptions: {
         Row: {
           created_at: string;
-          current_period_end: string | null;
-          customer_id: string | null;
+          current_period_end: string;
+          customer_id: number;
           deleted_at: string | null;
           id: string;
-          interval: Database["public"]["Enums"]["subscription_interval"] | null;
-          price_id: string | null;
-          provider: string;
-          subscription_id: string | null;
+          interval: Database["public"]["Enums"]["subscription_interval"];
+          price_id: number;
+          provider: Database["public"]["Enums"]["subscription_provider"];
+          subscription_id: number;
           updated_at: string;
           user_id: string;
         };
         Insert: {
           created_at?: string;
-          current_period_end?: string | null;
-          customer_id?: string | null;
+          current_period_end: string;
+          customer_id: number;
           deleted_at?: string | null;
           id?: string;
-          interval?: Database["public"]["Enums"]["subscription_interval"] | null;
-          price_id?: string | null;
-          provider: string;
-          subscription_id?: string | null;
+          interval: Database["public"]["Enums"]["subscription_interval"];
+          price_id: number;
+          provider: Database["public"]["Enums"]["subscription_provider"];
+          subscription_id: number;
           updated_at?: string;
           user_id: string;
         };
         Update: {
           created_at?: string;
-          current_period_end?: string | null;
-          customer_id?: string | null;
+          current_period_end?: string;
+          customer_id?: number;
           deleted_at?: string | null;
           id?: string;
-          interval?: Database["public"]["Enums"]["subscription_interval"] | null;
-          price_id?: string | null;
-          provider?: string;
-          subscription_id?: string | null;
+          interval?: Database["public"]["Enums"]["subscription_interval"];
+          price_id?: number;
+          provider?: Database["public"]["Enums"]["subscription_provider"];
+          subscription_id?: number;
           updated_at?: string;
           user_id?: string;
         };
@@ -266,6 +266,7 @@ export type Database = {
       connected_account_provider: "youtube" | "instagram";
       onboarding_steps: "username" | "stats" | "welcome";
       subscription_interval: "month" | "year";
+      subscription_provider: "lemon-squeezy";
       subscription_tier: "free" | "pro";
     };
     CompositeTypes: {
@@ -395,6 +396,7 @@ export const Constants = {
       connected_account_provider: ["youtube", "instagram"],
       onboarding_steps: ["username", "stats", "welcome"],
       subscription_interval: ["month", "year"],
+      subscription_provider: ["lemon-squeezy"],
       subscription_tier: ["free", "pro"],
     },
   },

@@ -1,7 +1,12 @@
 import { sql } from "drizzle-orm";
-import { pgPolicy, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, pgPolicy, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
 import { Profiles } from "./account.sql";
-import { subscriptionInterval } from "./enums.sql";
+import { subscriptionInterval, subscriptionProvider } from "./enums.sql";
+import type {
+  SubscriptionIntervalList,
+  SubscriptionProviderList,
+  SubscriptionTierList,
+} from "./schema.constants";
 import { timestamps } from "./schema.helpers";
 
 export const Subscriptions = pgTable(
@@ -12,12 +17,12 @@ export const Subscriptions = pgTable(
       .notNull()
       .references(() => Profiles.id, { onDelete: "cascade" })
       .unique(),
-    provider: text("provider").notNull(),
-    customerId: text("customer_id").unique(),
-    subscriptionId: text("subscription_id").unique(),
-    priceId: text("price_id"),
-    interval: subscriptionInterval("interval"),
-    currentPeriodEnd: timestamp("current_period_end"),
+    provider: subscriptionProvider("provider").notNull(),
+    customerId: integer("customer_id").unique().notNull(),
+    subscriptionId: integer("subscription_id").unique().notNull(),
+    priceId: integer("price_id").notNull(),
+    interval: subscriptionInterval("interval").notNull(),
+    currentPeriodEnd: timestamp("current_period_end").notNull(),
     ...timestamps,
   },
   (table) => [
@@ -27,3 +32,7 @@ export const Subscriptions = pgTable(
     }),
   ]
 );
+
+export type SubscriptionProvider = (typeof SubscriptionProviderList)[number];
+export type SubscriptionTier = (typeof SubscriptionTierList)[number];
+export type SubscriptionInterval = (typeof SubscriptionIntervalList)[number];

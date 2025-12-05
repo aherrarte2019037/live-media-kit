@@ -16,6 +16,7 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - api/cron (cron jobs)
+     * - api/webhook (webhook)
      */
     "/((?!_next/static|_next/image|favicon.ico|api/cron|api/webhook|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],

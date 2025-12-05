@@ -11,6 +11,7 @@ export const YouTubeChartMetricsList = [
 export const InstagramStatMetricsList = ["followers", "likes", "all"] as const;
 export const InstagramChartMetricsList = ["followers", "likes"] as const;
 
+export const SubscriptionProviderList = ["lemon-squeezy"] as const;
 export const SubscriptionTierList = ["free", "pro"] as const;
 export const SubscriptionIntervalList = ["month", "year"] as const;
 
